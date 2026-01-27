@@ -82,10 +82,14 @@ Press Enter to release memory and exit...
 **`Benchmark`**
 
 ```bash
-phys-gacha$ sudo ./phys_bench 2081 4 3 4 5 6
-Mapping 4 pages from PID 2081 to aligned vaddr 0x7fa400000000...
-Benchmarking 4.0 GB...
-  [RESULT] Write Bandwidth: 12.28 GB/s
+sora@dpdk:~/src/phys-gacha$ sudo ./phys_bench 2299 4 3 4 5 6
+--- Phys-Gacha Benchmark (Total 4 GB) ---
+  Sequential Write    :  13.96 GB/s (  4.00 GiB in 0.286 sec)
+  Sequential Read     :  24.67 GB/s (  4.00 GiB in 0.162 sec)
+  Read-Modify-Write   :  13.24 GB/s (  4.00 GiB in 0.302 sec)
+  Memory Copy         :  25.68 GB/s (  4.00 GiB in 0.156 sec)
+-------------------------------------------
+Benchmark Complete. (Check Sum: 1fffffff0000000)
 
 ```
 
