@@ -65,52 +65,44 @@ int main(int argc, char *argv[]) {
     }
 
     if (contiguous) {
-        printf("\n--- [phys-gacha] SSR Success! (Physical Contiguity Secured) ---\n");
+        printf("\n--- [phys-gacha] SSR Success! ---\n");
         
-        // 1GBアライメントされた仮想アドレス空間を確保
+        // 1GBアライメント仮想空間の構築
         void *raw = mmap(NULL, (size_t)(pages + 1) * GIB, PROT_NONE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         void *final_vaddr = (void *)(((uintptr_t)raw + GIB - 1) & ~(GIB - 1));
         
         printf("%-3s | %-35s | %-25s | %-s\n", "Idx", "Virtual Address Range", "Physical Address Range", "FD");
         printf("--------------------------------------------------------------------------------------------\n");
-
         for (int i = 0; i < pages; i++) {
-            void *v_start = (char *)final_vaddr + (i * GIB);
-            void *v_end   = (char *)v_start + GIB - 1;
-            uint64_t p_start = hp[i].paddr;
-            uint64_t p_end   = p_start + GIB - 1;
-
-            mmap(v_start, GIB, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED, hp[i].fd, 0);
-            munmap(hp[i].vaddr_orig, GIB);
-
+            void *v_s = (char *)final_vaddr + (i * GIB);
+            uint64_t p_s = hp[i].paddr;
+            mmap(v_s, GIB, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_FIXED, hp[i].fd, 0);
             printf("%3d | %p-%p | 0x%012llx-0x%012llx | %2d\n", 
-                   i, v_start, v_end, (unsigned long long)p_start, (unsigned long long)p_end, hp[i].fd);
+                   i, v_s, (char *)v_s + GIB - 1, (unsigned long long)p_s, (unsigned long long)p_s + GIB - 1, hp[i].fd);
         }
-
         printf("--------------------------------------------------------------------------------------------\n");
-        printf("PID: %d | Total Size: %d GB\n", getpid(), pages);
-        
-        // コマンドHINTの生成
+
+        // コマンドHINT用のFDリスト作成
         char fd_list[256] = "";
         char *ptr = fd_list;
         for(int i=0; i<pages; i++) ptr += sprintf(ptr, "%d ", hp[i].fd);
 
         printf("\n\033[1;33m[COMMAND HINTS]\033[0m\n");
-        printf("1. Benchmarking:\n");
-        printf("   \033[1;32msudo ./phys_bench %d %d %s\033[0m\n", getpid(), pages, fd_list);
-        printf("2. DMA Simulation:\n");
-        printf("   \033[1;32msudo ./phys_dma_sim %d %s\033[0m\n", getpid(), fd_list);
-        printf("3. Peek Physical Memory:\n");
-        printf("   \033[1;32msudo ./phys_peek %d %d 0x%llx <target_phys_addr>\033[0m\n", 
-               getpid(), hp[0].fd, (unsigned long long)hp[0].paddr);
+        printf("1. Single-Thread Bench (Core 0, Latency focus):\n");
+        printf("   \033[1;32msudo ./phys_bench_single %d %d %s\033[0m\n", getpid(), pages, fd_list);
         
-        printf("\n\033[1;31m!!! Do not press Enter until you finish using other tools !!!\033[0m\n");
-        printf("Press Enter to release memory and exit...");
+        printf("2. Multi-Thread Bench (Bandwidth focus, e.g., 4 threads):\n");
+        printf("   \033[1;32msudo ./phys_bench_multi %d %d 4 %s\033[0m\n", getpid(), pages, fd_list);
+
+        printf("3. DMA Simulation:\n");
+	printf("   \033[1;32msudo ./phys_dma_sim %d %s\033[0m\n", getpid(), fd_list);
+	printf("4. Peek Physical Memory:\n");
+	printf("   \033[1;32msudo ./phys_peek %d %d 0x%llx <target_phys_addr>\033[0m\n",
+			getpid(), hp[0].fd, (unsigned long long)hp[0].paddr);
+
+        printf("\nPID: %d | Press Enter to release memory and exit...", getpid());
         fflush(stdout);
-        
-        char buf;
-        if (read(0, &buf, 1) < 0) {} 
-        free(hp);
+        char buf; if (read(0, &buf, 1) < 0) {} 
         return 0;
     }
 

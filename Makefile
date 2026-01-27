@@ -2,14 +2,20 @@ CC      = gcc
 CFLAGS  = -O2 -Wall
 LDFLAGS = -lnuma -lpthread
 
-TARGETS = phys_try phys_bench phys_dma_sim phys_peek
+TARGETS = phys_try phys_bench_single phys_bench_multi phys_bench_prefetch phys_dma_sim phys_peek
 
 all: $(TARGETS)
 
 phys_try: phys_try.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
-phys_bench: phys_bench.c
+phys_bench_single: phys_bench_single.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+phys_bench_multi: phys_bench_multi.c
+	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
+
+phys_bench_prefetch: phys_bench_prefetch.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
 
 phys_dma_sim: phys_dma_sim.c

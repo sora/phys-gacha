@@ -55,41 +55,52 @@ Reserving 4 x 1GB hugepages on Node 0...
 ========================================
 Step 1: Allocating 4 independent 1GB pages on Node 0...
 
---- [phys-gacha] SSR Success! (Physical Contiguity Secured) ---
+--- [phys-gacha] SSR Success! ---
 Idx | Virtual Address Range               | Physical Address Range    | FD
 --------------------------------------------------------------------------------------------
-  0 | 0x7f4640000000-0x7f467fffffff | 0x000140000000-0x00017fffffff |  3
-  1 | 0x7f4680000000-0x7f46bfffffff | 0x000180000000-0x0001bfffffff |  4
-  2 | 0x7f46c0000000-0x7f46ffffffff | 0x0001c0000000-0x0001ffffffff |  5
-  3 | 0x7f4700000000-0x7f473fffffff | 0x000200000000-0x00023fffffff |  6
+  0 | 0x7fa600000000-0x7fa63fffffff | 0x000140000000-0x00017fffffff |  3
+  1 | 0x7fa640000000-0x7fa67fffffff | 0x000180000000-0x0001bfffffff |  4
+  2 | 0x7fa680000000-0x7fa6bfffffff | 0x0001c0000000-0x0001ffffffff |  5
+  3 | 0x7fa6c0000000-0x7fa6ffffffff | 0x000200000000-0x00023fffffff |  6
 --------------------------------------------------------------------------------------------
-PID: 2081 | Total Size: 4 GB
 
 [COMMAND HINTS]
-1. Benchmarking:
-   sudo ./phys_bench 2081 4 3 4 5 6
-2. DMA Simulation:
-   sudo ./phys_dma_sim 2081 3 4 5 6
-3. Peek Physical Memory:
-   sudo ./phys_peek 2081 3 0x140000000 <target_phys_addr>
-
-!!! Do not press Enter until you finish using other tools !!!
-Press Enter to release memory and exit...
+1. Single-Thread Bench (Core 0, Latency focus):
+   sudo ./phys_bench_single 3289 4 3 4 5 6
+2. Multi-Thread Bench (Bandwidth focus, e.g., 4 threads):
+   sudo ./phys_bench_multi 3289 4 4 3 4 5 6
+3. DMA Simulation:
+   sudo ./phys_dma_sim 3289 3 4 5 6
+4. Peek Physical Memory:
+   sudo ./phys_peek 3289 3 0x140000000 <target_phys_addr>
 
 ```
 
 
-**`Benchmark`**
+**`Benchmark (single core)`**
 
 ```bash
-sora@dpdk:~/src/phys-gacha$ sudo ./phys_bench 2299 4 3 4 5 6
---- Phys-Gacha Benchmark (Total 4 GB) ---
-  Sequential Write    :  13.96 GB/s (  4.00 GiB in 0.286 sec)
-  Sequential Read     :  24.67 GB/s (  4.00 GiB in 0.162 sec)
-  Read-Modify-Write   :  13.24 GB/s (  4.00 GiB in 0.302 sec)
-  Memory Copy         :  25.68 GB/s (  4.00 GiB in 0.156 sec)
--------------------------------------------
-Benchmark Complete. (Check Sum: 1fffffff0000000)
+phys-gacha$ sudo ./phys_bench_single 3235 4 3 4 5 6
+--- Single-Thread SSR Benchmark (4-Pattern) ---
+  Seq Write   :  13.97 GB/s
+  Seq Read    :  24.79 GB/s
+  Shuffling indices for random access...
+  Rand Write  :   0.96 GB/s (  7.72 ns/op)
+  Rand Read   :   1.47 GB/s (  5.05 ns/op)
+-----------------------------------------------
+CheckSum: 1fffffff0000000
+
+```
+
+**`Benchmark (multi-thread)`**
+
+```bash
+phys-gacha$ sudo ./phys_bench_multi 3235 4 4 3 4 5 6
+Preparing indices for random access tests...
+Running Seq Write  (4 threads)...  15.11 GB/s
+Running Seq Read   (4 threads)...  43.41 GB/s
+Running Rand Write (4 threads)...   1.15 GB/s
+Running Rand Read  (4 threads)...   2.37 GB/s
 
 ```
 
