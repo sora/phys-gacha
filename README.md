@@ -4,13 +4,12 @@
 
 ## Components
 
-| Component | Description |
-| --- | --- |
-| **`phys_try`** | Gacha engine that secures contiguous 1GB hugepages and exports them via file descriptors for cross-process access. |
-| **`allocate_4gb.sh`** | A manager script that handles system-level hugepage reservation and memory "massage" (defragmentation) to ensure SSR success. |
-| **`phys_bench_single`** | Analyzes single-core performance, measuring DRAM latency and optimization-resistant sequential/random access patterns. |
-| **`phys_bench_multi`** | Saturates hardware memory channels using parallel threads and core pinning to determine the system's aggregate bandwidth limits. |
-| **`phys_peek`** | A surgical utility to read or write specific physical addresses within the allocated sanctuary via PID and FD mapping. |
+**`phys_try`** Core allocator that secures contiguous 1GB hugepages and keeps them accessible via /proc file descriptors.
+**`allocate_4gb.sh`** Automation script for system-level hugepage reservation and memory defragmentation (compaction).
+**`phys_bench_single`** Single-threaded benchmark for measuring memory latency and per-core throughput.
+**`phys_bench_multi`** Multi-threaded stress tester for evaluating aggregate memory bandwidth and bus saturation limits.
+**`phys_peek`** Low-level utility to inspect or modify memory contents at specific physical addresses.
+**`phys_dma_sim`** Background memory traffic emulator to simulate DMA transfers and evaluate contention.
 
 ---
 
