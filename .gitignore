@@ -1,0 +1,8 @@
+phys_try
+phys_bench
+phys_peek
+phys_dma_sim
+
+*.o
+*.swp
+.phys_info
