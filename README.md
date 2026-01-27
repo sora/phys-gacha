@@ -4,10 +4,13 @@
 
 ## Components
 
-- **`phys_try`**: The core allocator. Allocates hugepages, binds to NUMA, checks contiguity, and holds memory.
-- **`allocate_4gb.sh`**: The orchestrator. Retries up to 10 times with memory compaction.
-- **`phys_bench`**: Measures raw memory throughput (GB/s) via `/dev/mem`.
-- **`phys_peek`**: Directly reads/writes 64-bit values at physical addresses for debugging.
+| Component | Description |
+| --- | --- |
+| **`phys_try`** | Gacha engine that secures contiguous 1GB hugepages and exports them via file descriptors for cross-process access. |
+| **`allocate_4gb.sh`** | A manager script that handles system-level hugepage reservation and memory "massage" (defragmentation) to ensure SSR success. |
+| **`phys_bench_single`** | Analyzes single-core performance, measuring DRAM latency and optimization-resistant sequential/random access patterns. |
+| **`phys_bench_multi`** | Saturates hardware memory channels using parallel threads and core pinning to determine the system's aggregate bandwidth limits. |
+| **`phys_peek`** | A surgical utility to read or write specific physical addresses within the allocated sanctuary via PID and FD mapping. |
 
 ---
 
