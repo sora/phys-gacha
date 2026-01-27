@@ -4,12 +4,12 @@
 
 ## Components
 
-**`phys_try`** Core allocator that secures contiguous 1GB hugepages and keeps them accessible via /proc file descriptors.
-**`allocate_4gb.sh`** Automation script for system-level hugepage reservation and memory defragmentation (compaction).
-**`phys_bench_single`** Single-threaded benchmark for measuring memory latency and per-core throughput.
-**`phys_bench_multi`** Multi-threaded stress tester for evaluating aggregate memory bandwidth and bus saturation limits.
-**`phys_peek`** Low-level utility to inspect or modify memory contents at specific physical addresses.
-**`phys_dma_sim`** Background memory traffic emulator to simulate DMA transfers and evaluate contention.
+* **`phys_try`** Core allocator that secures contiguous 1GB hugepages and keeps them accessible via /proc file descriptors.
+* **`allocate_4gb.sh`** Automation script for system-level hugepage reservation and memory defragmentation (compaction).
+* **`phys_bench_single`** Single-threaded benchmark for measuring memory latency and per-core throughput.
+* **`phys_bench_multi`** Multi-threaded stress tester for evaluating aggregate memory bandwidth and bus saturation limits.
+* **`phys_peek`** Low-level utility to inspect or modify memory contents at specific physical addresses.
+* **`phys_dma_sim`** Background memory traffic emulator to simulate DMA transfers and evaluate contention.
 
 ---
 
