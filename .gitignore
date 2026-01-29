@@ -4,6 +4,8 @@ phys_bench_multi
 phys_bench_prefetch
 phys_peek
 phys_dma_sim
+phys_debug_dmawrite
+phys_debug_dmaread
 
 *.o
 *.swp
